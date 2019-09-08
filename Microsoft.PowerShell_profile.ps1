@@ -9,8 +9,10 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 # display git branch and stats when navigating inside a git repository.
 # https://markembling.info/2009/09/my-ideal-powershell-prompt-with-git-integration
 
-# see http://gist.github.com/180853 for gitutils.ps1.
-. (Resolve-Path ~/Documents/WindowsPowershell/gitutils.ps1)
+# see http://gist.github.com/180853 for gitutils.ps1 -- file must exist at this path, with content
+# from this gist URL for colored prompts to work correctly in git projects
+. (Resolve-Path C:/Users/chris/OneDrive/Documents/WindowsPowerShell/gitutils.ps1)
+
 #other resource
 # http://stackingcode.com/blog/2011/11/05/powershell-prompt
 
@@ -35,23 +37,20 @@ $path = $pathbits[0] + "\"
 } else {
 $path = $pathbits[$pathbits.length - 1]
 }
-
-    $host.ui.rawui.WindowTitle = " " + $adminRole + ": surfaceOwl@ $pwd" + " "
-
+    # change window title
+    $host.ui.rawui.WindowTitle = " " + $adminRole
+    # $host.ui.rawui.WindowTitle = " " + $adminRole + ": surfaceOwl@ $pwd" + " "
 
     # display user in terminal
     # to change depth of user path displayed change the number inside the first pair of []
     $userLocation = $currentDirectory
     # change $userlocation to '' to have nothing displayed
-
     # $userLocation example formats commented out below
     # $userLocation = ($pwd -split '\\')[3]+' '+$(($pwd -split '\\')[3] -join '\') + '> '
     # $userLocation = $(($pwd -split '\\')[-1] -join '\') + '> '
 
-
     # set colors based on location
     Write-Host($userLocation) -nonewline -foregroundcolor Green
-
 
     if (isCurrentDirectoryGitRepository) {
         $status = gitStatus
