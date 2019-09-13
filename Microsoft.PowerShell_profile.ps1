@@ -9,16 +9,12 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 # display git branch and stats when navigating inside a git repository.
 # https://markembling.info/2009/09/my-ideal-powershell-prompt-with-git-integration
 
-# see http://gist.github.com/180853 for gitutils.ps1 -- file must exist at this path, with content
-# from this gist URL for colored prompts to work correctly in git projects
+# see http://gist.github.com/180853 for gitutils.ps1.
 . (Resolve-Path C:/Users/chris/OneDrive/Documents/WindowsPowerShell/gitutils.ps1)
 
 #other resource
 # http://stackingcode.com/blog/2011/11/05/powershell-prompt
-
 # admin checking utilities:  https://blogs.msdn.microsoft.com/virtual_pc_guy/2010/09/23/a-self-elevating-powershell-script/
-
-
 # get the ID and security principal of the current user account
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
 $myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
@@ -44,6 +40,7 @@ $path = $pathbits[$pathbits.length - 1]
     # display user in terminal
     # to change depth of user path displayed change the number inside the first pair of []
     $userLocation = $currentDirectory
+
     # change $userlocation to '' to have nothing displayed
     # $userLocation example formats commented out below
     # $userLocation = ($pwd -split '\\')[3]+' '+$(($pwd -split '\\')[3] -join '\') + '> '
@@ -85,10 +82,8 @@ Set-PSReadlineOption -BellStyle None
 # fix powershell tab completion so it cycles through all available options rather than picking 1st one found
 Set-PSReadlineOption -EditMode Emacs
 
-
 # Clear-Host clears the powershell window
 Clear-Host
-
 
 # custom function - automate upgrade of python pip, setuptools, wheel and virtualenv
 function upgradepip {
@@ -96,15 +91,15 @@ function upgradepip {
     Invoke-Expression "python -m pip install --upgrade pip, setuptools, wheel, virtualenv --ignore-installed"
 }
 
-
 # custom function - simplify command for activation of python virtual environment
-# venv activate; must be after elevating to Administrator Role
+# activatevenv; must be after elevating to Administrator Role
+# must not be named `activate` which conflicts with python anaconda command
 function Activate-venv {
     # run this command from powershell to activate python venv in windows
     Invoke-Expression ". .\venv\Scripts\activate"
 }
 
-Set-Alias activate Activate-venv
+Set-Alias activatevenv Activate-venv
 
 # last command - list current dir; useful when launching powershell to see where you are and local dir/files
 ls
