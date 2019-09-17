@@ -14,7 +14,10 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 
 #other resource
 # http://stackingcode.com/blog/2011/11/05/powershell-prompt
+
 # admin checking utilities:  https://blogs.msdn.microsoft.com/virtual_pc_guy/2010/09/23/a-self-elevating-powershell-script/
+
+
 # get the ID and security principal of the current user account
 $myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
 $myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
@@ -82,14 +85,17 @@ Set-PSReadlineOption -BellStyle None
 # fix powershell tab completion so it cycles through all available options rather than picking 1st one found
 Set-PSReadlineOption -EditMode Emacs
 
+
 # Clear-Host clears the powershell window
 Clear-Host
+
 
 # custom function - automate upgrade of python pip, setuptools, wheel and virtualenv
 function upgradepip {
     # run this command from powershell to activate python venv in windows
     Invoke-Expression "python -m pip install --upgrade pip, setuptools, wheel, virtualenv --ignore-installed"
 }
+
 
 # custom function - simplify command for activation of python virtual environment
 # activatevenv; must be after elevating to Administrator Role
@@ -99,6 +105,11 @@ function Activate-venv {
     Invoke-Expression ". .\venv\Scripts\activate"
 }
 
+# custom function - emulate linux `which` command (to find system objects)
+function which($name)
+{
+    Get-Command $name | Select-Object -ExpandProperty Definition
+}
 Set-Alias activatevenv Activate-venv
 
 # last command - list current dir; useful when launching powershell to see where you are and local dir/files
