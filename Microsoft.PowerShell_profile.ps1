@@ -10,7 +10,8 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 # https://markembling.info/2009/09/my-ideal-powershell-prompt-with-git-integration
 
 # see http://gist.github.com/180853 for gitutils.ps1.
-. (Resolve-Path C:/Users/chris/OneDrive/Documents/WindowsPowerShell/gitutils.ps1)
+# laptop: . (Resolve-Path C:/Users/chris/OneDrive/Documents/WindowsPowerShell/gitutils.ps1)
+. (Resolve-Path C:/Users/chris/Documents/WindowsPowerShell/gitutils.ps1)
 
 #other resource
 # http://stackingcode.com/blog/2011/11/05/powershell-prompt
@@ -19,26 +20,27 @@ $PSDefaultParameterValues["Out-File:Encoding"] = "utf8"
 
 
 # get the ID and security principal of the current user account
-$myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
-$myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
+$myWindowsID = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$myWindowsPrincipal = new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
 
 # get the security principal for the Administrator role
-$adminRole=[System.Security.Principal.WindowsBuiltInRole]::Administrator
+$adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
 
 
 # colorize command prompts
-function prompt {
-    $currentDirectory = $(Get-Location)
+function prompt
+{
+    $currentDirectory = $( Get-Location )
     $path = ""
-$pathbits = ([string]$pwd).split("\", [System.StringSplitOptions]::RemoveEmptyEntries)
-if($pathbits.length -eq 1) {
-$path = $pathbits[0] + "\"
-} else {
-$path = $pathbits[$pathbits.length - 1]
-}
+    $pathbits = ([string]$pwd).split("\", [System.StringSplitOptions]::RemoveEmptyEntries)
+
+    if ($pathbits.length -eq 1) {
+    $path = $pathbits[0] + "\"
+    } else {
+    $path = $pathbits[$pathbits.length - 1]
+    }
     # change window title
     $host.ui.rawui.WindowTitle = " " + $adminRole
-    # $host.ui.rawui.WindowTitle = " " + $adminRole + ": surfaceOwl@ $pwd" + " "
 
     # display user in terminal
     # to change depth of user path displayed change the number inside the first pair of []
@@ -53,30 +55,30 @@ $path = $pathbits[$pathbits.length - 1]
     Write-Host($userLocation) -nonewline -foregroundcolor Green
 
     if (isCurrentDirectoryGitRepository) {
-        $status = gitStatus
-        $currentBranch = $status["branch"]
+    $status = gitStatus
+    $currentBranch = $status["branch"]
 
-        Write-Host(' [') -nonewline -foregroundcolor Yellow
-        if ($status["ahead"] -eq $FALSE) {
-            # We are not ahead of origin
-            Write-Host($currentBranch) -nonewline -foregroundcolor Cyan
-        } else {
-            # We are ahead of origin
-            Write-Host($currentBranch) -nonewline -foregroundcolor Red
-        }
-        Write-Host(' +' + $status["added"]) -nonewline -foregroundcolor Yellow
-        Write-Host(' ~' + $status["modified"]) -nonewline -foregroundcolor Yellow
-        Write-Host(' -' + $status["deleted"]) -nonewline -foregroundcolor Yellow
+    Write-Host(' [') -nonewline -foregroundcolor Yellow
+    if ($status["ahead"] -eq $FALSE) {
+    # We are not ahead of origin
+    Write-Host($currentBranch) -nonewline -foregroundcolor Cyan
+    } else {
+    # We are ahead of origin
+    Write-Host($currentBranch) -nonewline -foregroundcolor Red
+    }
+    Write-Host(' +' + $status["added"]) -nonewline -foregroundcolor Yellow
+    Write-Host(' ~' + $status["modified"]) -nonewline -foregroundcolor Yellow
+    Write-Host(' -' + $status["deleted"]) -nonewline -foregroundcolor Yellow
 
-        if ($status["untracked"] -ne $FALSE) {
-            Write-Host(' !') -nonewline -foregroundcolor Yellow
-        }
-
-        Write-Host(']') -nonewline -foregroundcolor Yellow
+    if ($status["untracked"] -ne $FALSE) {
+    Write-Host(' !') -nonewline -foregroundcolor Yellow
     }
 
-Write-Host('>') -nonewline -foregroundcolor Green
-return " "
+    Write-Host(']') -nonewline -foregroundcolor Yellow
+    }
+
+    Write-Host('>') -nonewline -foregroundcolor Green
+    return " "
 }
 
 # turn off bell when trying to backspace at an empty prompt
@@ -91,7 +93,8 @@ Clear-Host
 
 
 # custom function - automate upgrade of python pip, setuptools, wheel and virtualenv
-function upgradepip {
+function upgradepip
+{
     # run this command from powershell to activate python venv in windows
     Invoke-Expression "python -m pip install --upgrade pip, setuptools, wheel, virtualenv --ignore-installed"
 }
@@ -100,7 +103,8 @@ function upgradepip {
 # custom function - simplify command for activation of python virtual environment
 # activatevenv; must be after elevating to Administrator Role
 # must not be named `activate` which conflicts with python anaconda command
-function Activate-venv {
+function Activate-venv
+{
     # run this command from powershell to activate python venv in windows
     Invoke-Expression ". .\venv\Scripts\activate"
 }
